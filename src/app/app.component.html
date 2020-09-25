@@ -1,0 +1,29 @@
+<div class="nav" role="nav">
+  <h1>FRACTALIX</h1>
+</div>
+<div class="panel">
+  <div class="left-panel">
+    <div class="render-panel">
+      <canvas id="canvas"></canvas>
+    </div>
+    <div class="navigation-panel">
+      <div>
+        <b>Camera origin</b>
+        <input matInput [(ngModel)]="cameraOrigin.x" />
+        <input matInput [(ngModel)]="cameraOrigin.y" />
+        <input matInput [(ngModel)]="cameraOrigin.z" />
+      </div>
+      <div>
+        <b>Camera target</b>
+        <input matInput [(ngModel)]="cameraTarget.x" />
+        <input matInput [(ngModel)]="cameraTarget.y" />
+        <input matInput [(ngModel)]="cameraTarget.z" />
+      </div>
+    </div>
+  </div>
+  <div class="right-panel">
+    <div class="tab-panel">
+
+    </div>
+  </div>
+</div>
