@@ -1,5 +1,7 @@
 import * as THREE from 'three';
-import { mandelbulbShader } from '../../shaders/shaders';
+import { Formula } from '../shaders/formulas/formula';
+import { Mandelbulb } from '../shaders/formulas/mandelbulb';
+import { RaymarchShader } from '../shaders/raymarch';
 
 export class RendererComponent {
 
@@ -7,12 +9,14 @@ export class RendererComponent {
   renderer: THREE.WebGLRenderer;
   camera: THREE.OrthographicCamera;
   scene: THREE.Scene;
+  material: THREE.ShaderMaterial;
+  formula: Formula;
 
   uniforms = {
     iTime: { value: 0 },
     iResolution:  { value: new THREE.Vector3() },
     iCameraTarget: { value: new THREE.Vector3(0, 0, 1) },
-    iCameraOrigin: { value: new THREE.Vector3(0, 0, -2) },
+    iCameraOrigin: { value: new THREE.Vector3(0, 0, -3) },
   };
 
   constructor() {
@@ -31,16 +35,19 @@ export class RendererComponent {
     );
     this.scene = new THREE.Scene();
     const plane = new THREE.PlaneBufferGeometry(2, 2);
-    const material = new THREE.ShaderMaterial();
-    material.uniforms = this.uniforms;
-    material.fragmentShader = mandelbulbShader;
-    const mesh = new THREE.Mesh(plane, material);
+    this.material = new THREE.ShaderMaterial();
+    this.material.uniforms = this.uniforms;
+
+    const raymarcher = new RaymarchShader();
+    this.formula = new Mandelbulb();
+    for(const key in this.formula.uniforms) {
+      this.uniforms[key] = this.formula.uniforms[key];
+    }
+    this.material.fragmentShader = raymarcher.build(this.formula);
+    const mesh = new THREE.Mesh(plane, this.material);
     this.scene.add(mesh);
     window.addEventListener('resize', () => this.setSize());
-
-
-    window.addEventListener('keydown', (e) => console.log(e));
-    canvas.addEventListener('mousedown', () => console.log('canvas clicked'));
+    window.addEventListener('keydown', (e) => this.handleKeyDown(e));
   }
 
   setSize() {
@@ -57,6 +64,15 @@ export class RendererComponent {
     this.uniforms.iTime.value = time;
     this.renderer.render(this.scene, this.camera);
     requestAnimationFrame((t) => this.render(t));
+  }
+
+  handleKeyDown($event: any) {
+    console.log($event);
+  }
+
+  setShader(fragmentShader: string) {
+    this.material.fragmentShader = fragmentShader;
+    this.material.needsUpdate = true;
   }
 
 }

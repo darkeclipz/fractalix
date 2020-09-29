@@ -7,23 +7,70 @@
       <canvas id="canvas"></canvas>
     </div>
     <div class="navigation-panel">
-      <div>
-        <b>Camera origin</b>
-        <input matInput [(ngModel)]="cameraOrigin.x" />
-        <input matInput [(ngModel)]="cameraOrigin.y" />
-        <input matInput [(ngModel)]="cameraOrigin.z" />
-      </div>
-      <div>
-        <b>Camera target</b>
-        <input matInput [(ngModel)]="cameraTarget.x" />
-        <input matInput [(ngModel)]="cameraTarget.y" />
-        <input matInput [(ngModel)]="cameraTarget.z" />
-      </div>
+      <mat-tab-group>
+        <mat-tab label="Navigation"> 
+          <div>
+            <mat-form-field>
+              <mat-label>Camera Origin X</mat-label>
+              <input matInput [(ngModel)]="cameraOrigin.x" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Camera Origin Y</mat-label>
+              <input matInput [(ngModel)]="cameraOrigin.y" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Camera Origin Z</mat-label>
+              <input matInput [(ngModel)]="cameraOrigin.z" />
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field>
+              <mat-label>Camera Target X</mat-label>
+              <input matInput [(ngModel)]="cameraTarget.x" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Camera Target Y</mat-label>
+              <input matInput [(ngModel)]="cameraTarget.y" />
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Camera Target Z</mat-label>
+              <input matInput [(ngModel)]="cameraTarget.z" />
+            </mat-form-field>
+          </div>
+        </mat-tab>
+        <mat-tab label="Animation"> 
+          Animation
+        </mat-tab>
+      </mat-tab-group>
     </div>
   </div>
   <div class="right-panel">
     <div class="tab-panel">
-
+      <mat-tab-group>
+        <mat-tab label="Calculation">
+          Calculations
+        </mat-tab>
+        <mat-tab label="Formulas"> 
+          <div style="padding: 12px;">
+            <mat-form-field appearance="fill" class="full-width">
+              <mat-label>Formula</mat-label>
+              <mat-select [ngModel]="formula" (change)="onFormulaChanged($event.target.value)">
+                <mat-option value="mandelbulb">Mandelbulb</mat-option>
+                <mat-option value="mandelbox">Mandelbox</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div *ngFor="let item of uniforms | keyvalue">
+              <mat-form-field class="full-width" >
+                <mat-label>{{ item.key }}</mat-label>
+                <input matInput type="input" [(ngModel)]="uniforms[item.key].value" />
+              </mat-form-field>
+              <mat-slider class="full-width" *ngIf="uniformHasRange(item.key)" [min]="uniforms[item.key].range.min" [max]="uniforms[item.key].range.max" [step]="uniforms[item.key].range.step" [(ngModel)]="uniforms[item.key].value"></mat-slider>
+            </div>
+          </div>
+        </mat-tab>
+        <mat-tab label="Lightning"> Lightning </mat-tab>
+        <mat-tab label="Post-process"> Post-process </mat-tab>
+      </mat-tab-group>      
     </div>
   </div>
 </div>
